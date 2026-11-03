@@ -123,7 +123,9 @@
       "reset": "열 초기화"
     },
     "versionBanner": {
-      "retry": "다시 확인"
+      "retry": "다시 확인",
+      "scanTimeout": "\"{{name}}\"의 버전 묶기를 확인하지 못했습니다. 검사가 너무 오래 걸렸습니다. 다른 폴더의 버전 묶기는 그대로입니다.",
+      "scanFailed": "\"{{name}}\"의 버전 묶기를 확인하지 못했습니다. {{detail}}"
     },
     "pathBar": {
       "edit": "경로로 이동",
@@ -212,6 +214,8 @@
     "putBackCount": "{{count}}개 항목 원래 위치로 복원",
     "emptyTrash": "휴지통 비우기",
     "newFolder": "새 폴더",
+    "pinToSidebar": "사이드바에 고정",
+    "unpinFromSidebar": "사이드바에서 제거",
     "new": "새로 만들기",
     "trashShort": "휴지통"
   },

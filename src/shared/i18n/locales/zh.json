@@ -123,7 +123,9 @@
       "reset": "重置列"
     },
     "versionBanner": {
-      "retry": "重新检查"
+      "retry": "重新检查",
+      "scanTimeout": "无法检查“{{name}}”的版本归组：扫描耗时过长。其他文件夹的版本归组不受影响。",
+      "scanFailed": "无法检查“{{name}}”的版本归组：{{detail}}"
     },
     "pathBar": {
       "edit": "前往路径",
@@ -212,6 +214,8 @@
     "putBackCount": "将 {{count}} 个项目放回原处",
     "emptyTrash": "清倒废纸篓",
     "newFolder": "新建文件夹",
+    "pinToSidebar": "固定到边栏",
+    "unpinFromSidebar": "从边栏中移除",
     "new": "新建",
     "trashShort": "废纸篓"
   },

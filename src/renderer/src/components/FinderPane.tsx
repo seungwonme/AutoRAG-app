@@ -5,6 +5,7 @@ import { isTagPath, isVirtualListing, RECENTS_PATH, tagNameOf } from "../../../s
 import type { FinderSource } from "../data/source";
 import { DirectoryDataContext, type DirectoryData } from "../hooks/useDirectoryData";
 import { useFinderController, type QuickLookBridge } from "../hooks/useFinderController";
+import { useNavigationMotion } from "../hooks/useNavigationMotion";
 import type { ControllerStore } from "../hooks/usePaneControllers";
 import { pressRow } from "../lib/row-drag";
 import type { AiDeliveryRequest } from "../state/ai-delivery";
@@ -23,7 +24,7 @@ import { FileList } from "./FileList";
 import type { BackgroundDropHandlers, RowCallbacks } from "./FileRow";
 import { IconGrid } from "./IconGrid";
 import { IndexProblemBanner } from "./IndexProblemBanner";
-import { HEADER_VIEWPORT_CLASS, LIST_COLUMN_CLASS, followScrollLeft } from "./list-scroll";
+import { HEADER_VIEWPORT_CLASS, LIST_COLUMN_CLASS, NAV_VIEWPORT_CLASS, followScrollLeft } from "./list-scroll";
 import { PathBar } from "./PathBar";
 import { ScopeBar } from "./ScopeBar";
 import { SettingsView } from "./SettingsView";
@@ -97,6 +98,9 @@ export const FinderPane = memo(function FinderPane({
 		onFocusComposer: shell.onFocusComposer,
 		onToast: shell.onToast,
 	});
+	// Entering or leaving a folder slides the new listing in; the scope keeps a tab or view-mode switch from animating.
+	const backDepth = pane.tabs.find((tab) => tab.id === pane.activeId)?.back.length ?? 0;
+	const navMotion = useNavigationMotion({ scope: `${pane.activeId}:${finder.layout}`, dir: finder.listingDir, depth: backDepth });
 	const headerViewportRef = useRef<HTMLDivElement>(null);
 	// The list is the one sideways scroller; the column header follows it (`list-scroll.ts`).
 	const listElement = finder.listRef.current;
@@ -390,25 +394,28 @@ export const FinderPane = memo(function FinderPane({
 							}}
 						/>
 						{finder.layout === "icons" ? (
-							<IconGrid
-								sections={finder.stackSections}
-								listRef={finder.listRef}
-								searching={finder.searching}
-								emptyText={finder.emptyText}
-								selectedKeys={finder.selection.keys}
-								focusedZone={focused && finder.zone === "finder"}
-								flashPath={finder.flashPath}
-								renamePath={finder.renamePath}
-								renameDraft={finder.renameDraft}
-								versionFamilyError={finder.versionFamilyError}
-								onRetryVersionFamilies={finder.retryVersionFamilies}
-								background={backgroundDrop(listingDir)}
-								dropBackground={dropBackgroundDir === finder.path}
-								callbacks={rowCallbacks}
-								onMarqueeSelect={finder.marqueeSelect}
-							/>
+							<div className={NAV_VIEWPORT_CLASS} {...navMotion}>
+								<IconGrid
+									sections={finder.stackSections}
+									listRef={finder.listRef}
+									searching={finder.searching}
+									emptyText={finder.emptyText}
+									selectedKeys={finder.selection.keys}
+									focusedZone={focused && finder.zone === "finder"}
+									flashPath={finder.flashPath}
+									renamePath={finder.renamePath}
+									renameDraft={finder.renameDraft}
+									versionFamilyError={finder.versionFamilyError}
+									onRetryVersionFamilies={finder.retryVersionFamilies}
+									background={backgroundDrop(listingDir)}
+									dropBackground={dropBackgroundDir === finder.path}
+									callbacks={rowCallbacks}
+									onMarqueeSelect={finder.marqueeSelect}
+								/>
+							</div>
 						) : finder.layout === "columns" ? (
 							<ColumnBrowser
+								scope={pane.activeId}
 								panes={finder.columnPanes}
 								listRef={finder.listRef}
 								emptyText={finder.emptyText}
@@ -440,25 +447,27 @@ export const FinderPane = memo(function FinderPane({
 									onResizeColumn={(key: string, px: number) => shell.setListColumns((current) => setListColumnWidth(current, key, px))}
 								/>
 								</div>
-								<FileList
-									sections={finder.stackSections}
-									listPath={finder.path}
-									columns={listColumns}
-									minWidth={listFixedWidth(listColumns)}
-									versionFamilyError={finder.versionFamilyError}
-									onRetryVersionFamilies={finder.retryVersionFamilies}
-									listRef={finder.listRef}
-									searching={finder.searching}
-									emptyText={finder.emptyText}
-									selectedKeys={finder.selection.keys}
-									focusedZone={focused && finder.zone === "finder"}
-									flashPath={finder.flashPath}
-									renamePath={finder.renamePath}
-									renameDraft={finder.renameDraft}
-									background={backgroundDrop(listingDir)}
-									dropBackground={dropBackgroundDir === finder.path}
-									callbacks={rowCallbacks}
-								/>
+								<div className={NAV_VIEWPORT_CLASS} {...navMotion}>
+									<FileList
+										sections={finder.stackSections}
+										listPath={finder.path}
+										columns={listColumns}
+										minWidth={listFixedWidth(listColumns)}
+										versionFamilyError={finder.versionFamilyError}
+										onRetryVersionFamilies={finder.retryVersionFamilies}
+										listRef={finder.listRef}
+										searching={finder.searching}
+										emptyText={finder.emptyText}
+										selectedKeys={finder.selection.keys}
+										focusedZone={focused && finder.zone === "finder"}
+										flashPath={finder.flashPath}
+										renamePath={finder.renamePath}
+										renameDraft={finder.renameDraft}
+										background={backgroundDrop(listingDir)}
+										dropBackground={dropBackgroundDir === finder.path}
+										callbacks={rowCallbacks}
+									/>
+								</div>
 							</div>
 						)}
 						<PathBar

@@ -123,7 +123,9 @@
       "reset": "列を初期化"
     },
     "versionBanner": {
-      "retry": "再確認"
+      "retry": "再確認",
+      "scanTimeout": "「{{name}}」のバージョンのまとめを確認できませんでした。検査に時間がかかりすぎました。他のフォルダのバージョンのまとめには影響しません。",
+      "scanFailed": "「{{name}}」のバージョンのまとめを確認できませんでした。{{detail}}"
     },
     "pathBar": {
       "edit": "パスへ移動",
@@ -212,6 +214,8 @@
     "putBackCount": "{{count}}個の項目を元に戻す",
     "emptyTrash": "ゴミ箱を空にする",
     "newFolder": "新規フォルダー",
+    "pinToSidebar": "サイドバーに固定",
+    "unpinFromSidebar": "サイドバーから削除",
     "new": "新規作成",
     "trashShort": "ゴミ箱"
   },

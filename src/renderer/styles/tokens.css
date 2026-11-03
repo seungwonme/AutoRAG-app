@@ -349,6 +349,11 @@
   /* Split panes: a pane growing, shrinking, or appearing; the drop preview gliding between zones. */
   --dur-pane: 220ms;
   --ease-pane: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Opening or leaving a folder: the new listing slides in by --shift-nav (a column pane by --shift-nav-pane). */
+  --dur-nav: 200ms;
+  --ease-nav: var(--ease-pane);
+  --shift-nav: 20px;
+  --shift-nav-pane: 12px;
   --dur-color: 150ms;
   --dur-color-slow: 200ms;
   --dur-knob: 200ms;
