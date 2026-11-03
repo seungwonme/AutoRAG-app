@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import type { MouseEvent, ReactElement, RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import type { FinderEntry } from "../data/entries";
@@ -7,7 +7,6 @@ import { useDirectoryData, useEntrySidecar } from "../hooks/useDirectoryData";
 import { cn } from "../lib/cn";
 import { COLUMN_ROW_HEIGHT } from "../state/columns";
 import { GROUP_HEADER_HEIGHT, groupedLayout, groupedWindow, type GroupSection } from "../state/grouping";
-import type { NavigationDirection } from "../state/navigation-motion";
 import { basename } from "../state/paths";
 import { LIST_OVERSCAN } from "../state/virtual";
 import type { StackRow, VersionFamilyError } from "../state/version-family";
@@ -53,7 +52,6 @@ export interface ColumnCallbacks {
  * family head is selected a trailing "유사·중복본" pane lists its members.
  */
 export function ColumnBrowser({
-	scope,
 	panes,
 	variantColumn,
 	onSelectVariant,
@@ -71,8 +69,6 @@ export function ColumnBrowser({
 	dropBackgroundDir,
 	callbacks,
 }: {
-	/** The tab this view belongs to: panes that appear while the same tab stays on screen slide in; a tab switch does not. */
-	readonly scope: number;
 	readonly panes: readonly ColumnPaneView[];
 	readonly variantColumn: ColumnVariantView | null;
 	readonly onSelectVariant: (entry: FinderEntry) => void;
@@ -91,13 +87,6 @@ export function ColumnBrowser({
 	readonly callbacks: RowCallbacks;
 }): ReactElement {
 	const { t } = useTranslation();
-	// A pane mounted after this view committed for the same tab is a folder just opened or left; the first commit
-	// (opening the view, switching tab) shows its panes at rest.
-	const committedScope = useRef<number | null>(null);
-	useLayoutEffect(() => {
-		committedScope.current = scope;
-	});
-	const animatePanes = committedScope.current === scope;
 	return (
 		<div className="columns flex flex-1 flex-col min-h-0" ref={listRef}>
 			<VersionFamilyBanner error={versionFamilyError} onRetry={onRetryVersionFamilies} />
@@ -107,7 +96,6 @@ export function ColumnBrowser({
 						key={pane.path}
 						pane={pane}
 						index={index}
-						enter={animatePanes ? (index === 0 ? "leave" : "enter") : null}
 						opened={panes[index + 1]?.path ?? null}
 						background={paneBackground(pane.path)}
 						dropBackground={dropBackgroundDir === pane.path}
@@ -183,7 +171,6 @@ export function ColumnBrowser({
 function ColumnPane({
 	pane,
 	index,
-	enter,
 	opened,
 	background,
 	dropBackground,
@@ -198,11 +185,6 @@ function ColumnPane({
 }: {
 	readonly pane: ColumnPaneView;
 	readonly index: number;
-	/**
-	 * How this pane arrives, read once when it mounts: "enter" slides in from the right (a folder opened to the
-	 * right of the chosen one), "leave" from the left (the first pane came back). Null: it is simply there.
-	 */
-	readonly enter: NavigationDirection | null;
 	readonly opened: string | null;
 	readonly background: BackgroundDropHandlers;
 	readonly dropBackground: boolean;
@@ -215,7 +197,6 @@ function ColumnPane({
 	readonly columnCallbacks: ColumnCallbacks;
 	readonly callbacks: RowCallbacks;
 }): ReactElement {
-	const [arrival] = useState(enter);
 	const scrollerRef = useRef<HTMLDivElement | null>(null);
 	const contentRef = useRef<HTMLDivElement | null>(null);
 	const scroll = useScrollWindow(scrollerRef, contentRef);
@@ -264,7 +245,6 @@ function ColumnPane({
 		<div
 			ref={scrollerRef}
 			data-path={pane.path}
-			data-nav-pane={arrival ?? undefined}
 			className={cn(
 				"column flex-1 basis-0 min-w-0 min-h-0 p-6 overflow-auto border-r border-border",
 				dropBackground && "bg-accent-drop-hover",

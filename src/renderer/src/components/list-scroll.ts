@@ -8,11 +8,6 @@ export const LIST_SCROLLER_CLASS = "list flex-1 min-h-0 py-0 overflow-auto";
 export const HEADER_VIEWPORT_CLASS = "flex-none overflow-x-hidden";
 /** The column that stacks the header viewport and the list; it never scrolls itself. */
 export const LIST_COLUMN_CLASS = "flex min-h-0 flex-1 flex-col";
-/**
- * The box that holds a list or icon view and slides when a folder opens (`useNavigationMotion`). It is laid out
- * exactly like the scroller it wraps (a growing flex column), so adding it moves no pixel.
- */
-export const NAV_VIEWPORT_CLASS = "flex min-h-0 min-w-0 flex-1 flex-col";
 
 /** The slice of an element this needs; keeps the module free of the DOM lib the node project lacks. */
 interface Scrollable {
