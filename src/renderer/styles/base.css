@@ -230,64 +230,6 @@ small {
 	}
 }
 
-/* Folder navigation (issue #1) — the listing a folder opens into slides in from the side it was entered from:
- * `data-nav="enter"` from the right, `"leave"` (up, back) from the left (`useNavigationMotion`). A column pane
- * that appears (`data-nav-pane`, set by ColumnBrowser) does the same over a shorter distance.
- *
- * Only opacity and transform animate, and nothing disables pointer events, so rapid navigation never waits on
- * it. The keyframe exists twice because `data-nav-phase` flips on every navigation: a different animation-name
- * restarts the slide at once instead of after the previous one ends. Reduced motion never enters this block, so
- * the listing just changes. */
-@media (prefers-reduced-motion: no-preference) {
-	@keyframes navSlideA {
-		from {
-			opacity: 0;
-			transform: translateX(var(--nav-from));
-		}
-		to {
-			opacity: 1;
-			transform: none;
-		}
-	}
-
-	@keyframes navSlideB {
-		from {
-			opacity: 0;
-			transform: translateX(var(--nav-from));
-		}
-		to {
-			opacity: 1;
-			transform: none;
-		}
-	}
-
-	[data-nav="enter"] {
-		--nav-from: var(--shift-nav);
-	}
-
-	[data-nav="leave"] {
-		--nav-from: calc(var(--shift-nav) * -1);
-	}
-
-	[data-nav][data-nav-phase="0"] {
-		animation: navSlideA var(--dur-nav) var(--ease-nav);
-	}
-
-	[data-nav][data-nav-phase="1"] {
-		animation: navSlideB var(--dur-nav) var(--ease-nav);
-	}
-
-	[data-nav-pane="enter"] {
-		--nav-from: var(--shift-nav-pane);
-		animation: navSlideA var(--dur-nav) var(--ease-nav);
-	}
-
-	[data-nav-pane="leave"] {
-		--nav-from: calc(var(--shift-nav-pane) * -1);
-		animation: navSlideA var(--dur-nav) var(--ease-nav);
-	}
-}
-
 /* §7 Scrollbars — deliberately unstyled: any ::-webkit-scrollbar rule forces
  * Chromium's classic scrollbars, which consume layout width and shift the
  * Inspector's preview whenever content starts or stops scrolling. Leaving
