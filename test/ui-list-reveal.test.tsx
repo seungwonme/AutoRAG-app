@@ -257,6 +257,9 @@ describe("revealListRow while a folder opens or closes", () => {
 
 		run(300);
 		expect(grid().style.getPropertyValue("--slide-q")).toBe("");
+		// The openness is cleared in React's commit that ends the motion, which may come after the motion's last
+		// frame (#25); the scroll waiting on it lands on the next frame.
+		run(16);
 		// Row 40 of the settled (open) list, with the 8 rows the folder added counted.
 		expect(list().scrollTop).toBe(40 * ROW_HEIGHT + ROW_HEIGHT - VIEWPORT);
 	});
@@ -271,6 +274,7 @@ describe("revealListRow while a folder opens or closes", () => {
 		revealListRow(list(), { sections: closed, index: 59, intent: "step" });
 		expect(list().scrollTop).toBe(0);
 		run(400);
+		run(16);
 		// The last row of the closed list ends on the viewport's bottom edge: the list's settled end.
 		expect(list().scrollTop).toBe(60 * ROW_HEIGHT - VIEWPORT);
 	});
