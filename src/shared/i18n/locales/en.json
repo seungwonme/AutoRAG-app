@@ -648,6 +648,7 @@
       "discover": "Discovering",
       "parse": "Parsing",
       "embed": "Embedding",
+      "keyword": "Keyword indexing",
       "finalize": "Finishing"
     },
     "line": {
