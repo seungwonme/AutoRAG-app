@@ -2256,6 +2256,7 @@
         "rename": "Rename",
         "copyPath": "Copy Path",
         "newFolder": "New Folder",
+        "pinToSidebar": "Pin to / Remove from Sidebar",
         "extract": "Extract Archive",
         "compress": "Compress (ZIP)",
         "compress7z": "Compress as 7z",
